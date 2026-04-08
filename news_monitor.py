@@ -114,7 +114,7 @@ def collect_india_news():
                         'date': item.get('date', '')
                     })
 
-    return all_news[:15]  # 最多返回15条
+    return all_news[:10]  # 最多返回10条
 
 
 def collect_iraq_news():
@@ -152,7 +152,7 @@ def collect_iraq_news():
                         'date': item.get('date', '')
                     })
 
-    return all_news[:15]  # 最多返回15条
+    return all_news[:10]  # 最多返回10条
 
 
 def format_news_message(india_news, iraq_news):
@@ -167,10 +167,10 @@ def format_news_message(india_news, iraq_news):
         for i, news in enumerate(india_news, 1):
             # 翻译概述为中文
             snippet = translate_to_chinese(news['snippet'])
-            # 截断过长的概述
-            if len(snippet) > 100:
-                snippet = snippet[:100] + "..."
-            message += f"{i}. {snippet}\n   [{news['title']}]({news['url']})\n\n"
+            # 保留更长的概述，确保内容完整（最多500字符，约250个中文字）
+            if len(snippet) > 500:
+                snippet = snippet[:500] + "..."
+            message += f"{i}. {snippet}\n   🔗 [{news['title']}]({news['url']})\n\n"
     else:
         message += "今日暂无重要相关新闻\n\n"
 
@@ -180,10 +180,10 @@ def format_news_message(india_news, iraq_news):
         for i, news in enumerate(iraq_news, 1):
             # 翻译概述为中文
             snippet = translate_to_chinese(news['snippet'])
-            # 截断过长的概述
-            if len(snippet) > 100:
-                snippet = snippet[:100] + "..."
-            message += f"{i}. {snippet}\n   [{news['title']}]({news['url']})\n\n"
+            # 保留更长的概述，确保内容完整（最多500字符，约250个中文字）
+            if len(snippet) > 500:
+                snippet = snippet[:500] + "..."
+            message += f"{i}. {snippet}\n   🔗 [{news['title']}]({news['url']})\n\n"
     else:
         message += "今日暂无重要相关新闻\n\n"
 
