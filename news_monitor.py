@@ -8,6 +8,8 @@ import os
 import requests
 from datetime import datetime, timedelta
 import json
+import re
+from googletrans import Translator
 
 
 def search_news(query, days=1):
@@ -52,6 +54,29 @@ def is_relevant(title, snippet, keywords):
 
     # 必须包含至少一个关键词
     return any(kw.lower() in text for kw in keywords)
+
+
+def is_chinese(text):
+    """检测文本是否主要是中文"""
+    chinese_chars = len(re.findall(r'[\u4e00-\u9fff]', text))
+    return chinese_chars > len(text) * 0.3
+
+
+def translate_to_chinese(text):
+    """将英文翻译成中文"""
+    try:
+        # 如果已经是中文，直接返回
+        if is_chinese(text):
+            return text
+
+        # 翻译成中文
+        translator = Translator()
+        result = translator.translate(text, src='auto', dest='zh-cn')
+        return result.text
+    except Exception as e:
+        print(f"翻译失败: {str(e)}")
+        # 翻译失败时返回原文
+        return text
 
 
 def collect_india_news():
@@ -140,7 +165,11 @@ def format_news_message(india_news, iraq_news):
     message += "🇮🇳 **印度市场**\n\n"
     if india_news:
         for i, news in enumerate(india_news, 1):
-            snippet = news['snippet'][:100] + "..." if len(news['snippet']) > 100 else news['snippet']
+            # 翻译概述为中文
+            snippet = translate_to_chinese(news['snippet'])
+            # 截断过长的概述
+            if len(snippet) > 100:
+                snippet = snippet[:100] + "..."
             message += f"{i}. {snippet}\n   [{news['title']}]({news['url']})\n\n"
     else:
         message += "今日暂无重要相关新闻\n\n"
@@ -149,7 +178,11 @@ def format_news_message(india_news, iraq_news):
     message += "🇮🇶 **伊拉克市场**\n\n"
     if iraq_news:
         for i, news in enumerate(iraq_news, 1):
-            snippet = news['snippet'][:100] + "..." if len(news['snippet']) > 100 else news['snippet']
+            # 翻译概述为中文
+            snippet = translate_to_chinese(news['snippet'])
+            # 截断过长的概述
+            if len(snippet) > 100:
+                snippet = snippet[:100] + "..."
             message += f"{i}. {snippet}\n   [{news['title']}]({news['url']})\n\n"
     else:
         message += "今日暂无重要相关新闻\n\n"
@@ -235,7 +268,7 @@ def main():
     print(f"   找到 {len(iraq_news)} 条相关新闻")
 
     # 格式化消息
-    print("\n3️⃣  正在格式化消息...")
+    print("\n3️⃣  正在格式化消息并翻译成中文...")
     message = format_news_message(india_news, iraq_news)
 
     # 发送到飞书
