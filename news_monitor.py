@@ -25,7 +25,8 @@ def search_news(query, days=1):
     payload = json.dumps({
         "q": query,
         "num": 10,
-        "tbs": f"qdr:d{days}"  # 搜索过去N天的新闻
+        "tbs": f"qdr:d{days}",  # 搜索过去N天的新闻
+        "autocorrect": True
     })
 
     headers = {
@@ -37,7 +38,13 @@ def search_news(query, days=1):
         response = requests.post(url, headers=headers, data=payload, timeout=10)
         response.raise_for_status()
         data = response.json()
-        return data.get('news', [])
+        news_items = data.get('news', [])
+
+        # 打印第一条新闻的完整数据结构（用于调试）
+        if news_items and len(news_items) > 0:
+            print(f"示例新闻数据: {json.dumps(news_items[0], indent=2, ensure_ascii=False)}")
+
+        return news_items
     except Exception as e:
         print(f"搜索失败 [{query}]: {str(e)}")
         return []
