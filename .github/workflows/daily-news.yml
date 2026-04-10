@@ -8,6 +8,14 @@ on:
   # 允许手动触发
   workflow_dispatch:
 
+  # 代码推送时也可以触发（用于测试）
+  push:
+    branches:
+      - main
+    paths:
+      - 'news_monitor.py'
+      - '.github/workflows/daily-news.yml'
+
 jobs:
   monitor-news:
     runs-on: ubuntu-latest
