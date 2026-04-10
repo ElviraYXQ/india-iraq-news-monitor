@@ -1,20 +1,21 @@
 name: Daily India & Iraq News Monitor
 
 on:
-  schedule:
-    # 每天北京时间9:00运行 (UTC 1:00)
-    - cron: '0 1 * * *'
+  # schedule:
+  #   # 每天北京时间9:00运行 (UTC 1:00)
+  #   - cron: '0 1 * * *'
+  # 注释掉 schedule，只使用 cron-job.org 触发，避免重复
 
-  # 允许手动触发
+  # 允许手动触发（cron-job.org 通过这个触发）
   workflow_dispatch:
 
-  # 代码推送时也可以触发（用于测试）
-  push:
-    branches:
-      - main
-    paths:
-      - 'news_monitor.py'
-      - '.github/workflows/daily-news.yml'
+  # 代码推送时也可以触发（用于测试）- 已禁用，避免意外触发
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'news_monitor.py'
+  #     - '.github/workflows/daily-news.yml'
 
 jobs:
   monitor-news:
