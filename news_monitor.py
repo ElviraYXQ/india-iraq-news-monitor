@@ -87,18 +87,33 @@ def translate_to_chinese(text):
 
 
 def collect_india_news():
-    """收集印度相关新闻"""
+    """收集印度电商竞对相关新闻"""
+    # 聚焦竞对公司
+    competitors = ['Myntra', 'Ajio', 'Meesho', 'Shein', 'Nykaa Fashion', 'Flipkart Fashion']
+
     queries = [
-        "India e-commerce OR online shopping OR digital payment",
-        "India internet OR technology OR AI OR startup",
-        "India retail OR consumer OR fashion OR women",
-        "India mobile commerce OR fintech"
+        # 竞对公司动态
+        "Myntra OR Ajio OR Meesho OR Nykaa Fashion India news",
+        "Shein OR Flipkart Fashion India announcement",
+        # 营销玩法
+        "India fashion e-commerce marketing campaign OR promotion OR sale",
+        "Myntra OR Meesho India discount OR offer OR festival sale",
+        # 产品功能/业务策略
+        "India fashion platform new feature OR app update",
+        "Myntra OR Ajio India logistics OR delivery OR supply chain"
     ]
 
     keywords = [
-        'e-commerce', 'ecommerce', 'online shopping', 'digital payment',
-        'internet', 'ai', 'technology', 'consumer', 'retail',
-        'fashion', 'women', 'mobile', 'fintech', 'startup'
+        # 竞对名称
+        'myntra', 'ajio', 'meesho', 'shein', 'nykaa', 'flipkart',
+        # 营销动作
+        'sale', 'promotion', 'campaign', 'marketing', 'discount', 'offer',
+        # 公司动向
+        'funding', 'expansion', 'partnership', 'launch', 'announce',
+        # 产品功能
+        'feature', 'app', 'technology', 'ai', 'update',
+        # 业务策略
+        'pricing', 'logistics', 'delivery', 'supply chain'
     ]
 
     all_news = []
@@ -125,18 +140,33 @@ def collect_india_news():
 
 
 def collect_iraq_news():
-    """收集伊拉克相关新闻"""
+    """收集伊拉克电商竞对相关新闻"""
+    # 聚焦竞对公司（含新增的三个）
+    competitors = ['Miswag', 'Tebcan', 'Ozon.iq', 'Chicpoint', 'Trendyol', 'LCWaikiki', 'Namshi', 'Noon']
+
     queries = [
-        "Iraq e-commerce OR online shopping OR digital payment",
-        "Iraq internet OR technology OR AI OR startup",
-        "Iraq retail OR consumer OR fashion OR women",
-        "Iraq mobile commerce OR economy"
+        # 竞对公司动态
+        "Chicpoint OR Trendyol OR LCWaikiki Iraq news",
+        "Miswag OR Tebcan OR Namshi Iraq announcement",
+        # 营销玩法
+        "Iraq fashion e-commerce marketing campaign OR promotion",
+        "Trendyol OR Chicpoint Iraq discount OR offer OR sale",
+        # 产品功能/业务策略
+        "Iraq e-commerce new feature OR app update OR delivery",
+        "LCWaikiki OR Noon Iraq expansion OR logistics"
     ]
 
     keywords = [
-        'e-commerce', 'ecommerce', 'online shopping', 'digital payment',
-        'internet', 'ai', 'technology', 'consumer', 'retail',
-        'fashion', 'women', 'mobile', 'fintech', 'economy'
+        # 竞对名称
+        'chicpoint', 'trendyol', 'lcwaikiki', 'miswag', 'tebcan', 'ozon', 'namshi', 'noon',
+        # 营销动作
+        'sale', 'promotion', 'campaign', 'marketing', 'discount', 'offer',
+        # 公司动向
+        'funding', 'expansion', 'partnership', 'launch', 'announce', 'opening',
+        # 产品功能
+        'feature', 'app', 'technology', 'payment', 'update',
+        # 业务策略
+        'pricing', 'logistics', 'delivery', 'supply', 'store'
     ]
 
     all_news = []
@@ -166,29 +196,31 @@ def format_news_message(india_news, iraq_news):
     """格式化新闻消息"""
     today = datetime.now().strftime('%Y-%m-%d')
 
-    message = f"📰 **每日市场新闻速递 - {today}**\n\n"
+    message = f"📰 **竞对动态速递 - {today}**\n\n"
 
     # 印度新闻
-    message += "🇮🇳 **印度市场**\n\n"
+    message += "🇮🇳 **印度市场竞对**\n"
+    message += "📌 *关注：Myntra, Ajio, Meesho, Shein, Nykaa Fashion, Flipkart Fashion*\n\n"
     if india_news:
         for i, news in enumerate(india_news, 1):
             # 翻译概述为中文，保留完整内容
             snippet = translate_to_chinese(news['snippet'])
             message += f"{i}. {snippet}\n   🔗 [{news['title']}]({news['url']})\n\n"
     else:
-        message += "今日暂无重要相关新闻\n\n"
+        message += "今日暂无重要竞对动态\n\n"
 
     # 伊拉克新闻
-    message += "🇮🇶 **伊拉克市场**\n\n"
+    message += "🇮🇶 **伊拉克市场竞对**\n"
+    message += "📌 *关注：Chicpoint, Trendyol, LCWaikiki, Miswag, Tebcan, Namshi, Noon*\n\n"
     if iraq_news:
         for i, news in enumerate(iraq_news, 1):
             # 翻译概述为中文，保留完整内容
             snippet = translate_to_chinese(news['snippet'])
             message += f"{i}. {snippet}\n   🔗 [{news['title']}]({news['url']})\n\n"
     else:
-        message += "今日暂无重要相关新闻\n\n"
+        message += "今日暂无重要竞对动态\n\n"
 
-    message += "---\n💡 *关注领域：电商、科技、AI、互联网、民生、女性消费*"
+    message += "---\n🎯 *监控维度：营销玩法 | 公司动向 | 新产品功能 | 业务策略*"
 
     return message
 
