@@ -140,40 +140,70 @@ def collect_india_news():
 
 
 def collect_iraq_news():
-    """收集伊拉克电商竞对相关新闻"""
-    # 聚焦竞对公司（含新增的三个）
-    competitors = ['Miswag', 'Tebcan', 'Ozon.iq', 'Chicpoint', 'Trendyol', 'LCWaikiki', 'Namshi', 'Noon']
+    """收集伊拉克及中东电商竞对相关新闻"""
+    # 扩大竞对范围
+    competitors = [
+        # 核心竞对
+        'Miswag', 'Tebcan', 'Ozon.iq', 'Chicpoint', 'Trendyol', 'LCWaikiki', 'Namshi', 'Noon',
+        # 中东区域竞对
+        'Wadi', 'Sivvi', '6thStreet', 'Shukran', 'Modanisa'
+    ]
 
     queries = [
-        # 竞对公司动态
-        "Chicpoint OR Trendyol OR LCWaikiki Iraq news",
-        "Miswag OR Tebcan OR Namshi Iraq announcement",
-        # 营销玩法
-        "Iraq fashion e-commerce marketing campaign OR promotion",
-        "Trendyol OR Chicpoint Iraq discount OR offer OR sale",
-        # 产品功能/业务策略
-        "Iraq e-commerce new feature OR app update OR delivery",
-        "LCWaikiki OR Noon Iraq expansion OR logistics"
+        # === 第一类：明确包含Iraq的查询 ===
+        # 竞对在伊拉克的动态
+        "Chicpoint Iraq OR Trendyol Iraq OR LCWaikiki Iraq",
+        "Miswag Iraq OR Tebcan Iraq OR Ozon.iq Iraq",
+        "Namshi Iraq OR Noon Iraq OR Wadi Iraq",
+        # 伊拉克电商行业新闻
+        "Iraq e-commerce OR Iraq online shopping OR Iraq retail",
+        "Iraq fashion market OR Iraq apparel industry",
+
+        # === 第二类：中东区域新闻（可能覆盖伊拉克）===
+        # 竞对在中东/海湾地区的动态
+        "Trendyol Middle East OR Trendyol Gulf OR Trendyol MENA expansion",
+        "LCWaikiki Middle East OR LCWaikiki Gulf countries opening",
+        "Noon Middle East OR Noon Gulf OR Noon expansion MENA",
+        "Namshi Middle East OR Namshi Gulf market",
+
+        # 中东电商行业趋势
+        "Middle East e-commerce news fashion OR apparel",
+        "Gulf countries online shopping OR retail market",
+        "MENA e-commerce platform OR marketplace news",
+
+        # === 第三类：竞对公司总部新闻 ===
+        # 土耳其公司（可能影响伊拉克业务）
+        "Trendyol Turkey expansion OR international OR cross-border",
+        "LCWaikiki Turkey news OR expansion OR new market",
+        # 阿联酋公司
+        "Noon UAE expansion OR regional OR delivery",
+        "Namshi UAE news OR growth OR market"
     ]
 
     keywords = [
-        # 竞对名称
+        # 竞对名称（扩充）
         'chicpoint', 'trendyol', 'lcwaikiki', 'miswag', 'tebcan', 'ozon', 'namshi', 'noon',
+        'wadi', 'sivvi', '6thstreet', 'shukran', 'modanisa',
+        # 地理关键词
+        'iraq', 'iraqi', 'baghdad', 'middle east', 'gulf', 'mena',
         # 营销动作
-        'sale', 'promotion', 'campaign', 'marketing', 'discount', 'offer',
+        'sale', 'promotion', 'campaign', 'marketing', 'discount', 'offer', 'deal',
         # 公司动向
-        'funding', 'expansion', 'partnership', 'launch', 'announce', 'opening',
+        'funding', 'expansion', 'partnership', 'launch', 'announce', 'opening', 'investment',
+        'acquisition', 'merger', 'raised', 'series',
         # 产品功能
-        'feature', 'app', 'technology', 'payment', 'update',
+        'feature', 'app', 'technology', 'payment', 'update', 'platform', 'digital',
         # 业务策略
-        'pricing', 'logistics', 'delivery', 'supply', 'store'
+        'pricing', 'logistics', 'delivery', 'supply', 'store', 'warehouse', 'fulfillment',
+        'cross-border', 'international', 'regional', 'market', 'growth'
     ]
 
     all_news = []
     seen_urls = set()
 
+    # 使用3天的时间范围（伊拉克新闻更新频率较低）
     for query in queries:
-        news_items = search_news(query)
+        news_items = search_news(query, days=3)
         for item in news_items:
             url = item.get('link', '')
             if url and url not in seen_urls:
@@ -210,8 +240,9 @@ def format_news_message(india_news, iraq_news):
         message += "今日暂无重要竞对动态\n\n"
 
     # 伊拉克新闻
-    message += "🇮🇶 **伊拉克市场竞对**\n"
-    message += "📌 *关注：Chicpoint, Trendyol, LCWaikiki, Miswag, Tebcan, Namshi, Noon*\n\n"
+    message += "🇮🇶 **伊拉克及中东市场竞对**\n"
+    message += "📌 *核心关注：Chicpoint, Trendyol, LCWaikiki, Miswag, Tebcan, Ozon.iq, Namshi, Noon*\n"
+    message += "📌 *区域关注：Wadi, Sivvi, 6thStreet, Shukran, Modanisa + 中东电商行业动态*\n\n"
     if iraq_news:
         for i, news in enumerate(iraq_news, 1):
             # 翻译概述为中文，保留完整内容
